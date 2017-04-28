@@ -10,6 +10,7 @@
         ctrl.index = 0;
         ctrl.rootScope = $rootScope;
         ctrl.rootScope.controllPanel = false;
+        ctrl.rootScope.textControlPanle = true;
         //load img base
         ctrl.$onInit = function() {
       	   ctrl.img = ctrl.images;
@@ -34,11 +35,13 @@
           ctrl.canvasService.drawImage(ctrl.img[ctrl.index]);
         };
       ctrl.doneEditWindow = function(){
+        ctrl.rootScope.textControlPanle = true;
         ctrl.rootScope.controllPanel = false;
         ctrl.editCanvasService.doneResizeCanvasWindow(ctrl.img[ctrl.index]);
       };
 
       ctrl.openEditWindow = function(){
+        ctrl.rootScope.textControlPanle = false;
         ctrl.rootScope.controllPanel = true;
         ctrl.editCanvasService.resizeCanvasWindow(ctrl.img[ctrl.index]);
       };

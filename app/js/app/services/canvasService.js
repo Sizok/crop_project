@@ -1,5 +1,5 @@
 (function () {
-    function canvasService() {
+    function canvasService($rootScope) {
         var factory = {};
         factory.canvas;
         factory.context;
@@ -111,24 +111,11 @@
           }
 
 
-            canvas.on ("object:selected", function (object) {
-                var panel = $('.font-controll-panel');
-                panel.css('display', 'block');
-                var fontPanel = $('.font-controll-panel');
-                fontPanelCoordinates.top = titleText.top - fontPanel[0].clientHeight - 20;
-                fontPanelCoordinates.left = titleText.left + (fontPanel[0].clientWidth / 4);
-                fontPanel.css('top', fontPanelCoordinates.top);
-                fontPanel.css('left', fontPanelCoordinates.left);
-            });
-            canvas.on ("selection:cleared", function (object) {
-                var panel = $('.font-controll-panel');
-                panel.css('display', 'none');
-            });
 
 
 
           canvas.on ("object:moving", function (event) {
-            factory.imageCenter = false;
+
             var el = event.target;
             var img = canvas._objects[0];
             var rect = canvas._objects[1];
@@ -142,11 +129,15 @@
             el.left = right > el.left + el.getBoundingRectWidth() ? right - el.getBoundingRectWidth() : el.left;
             el.top = bottom > el.top + el.getBoundingRectHeight() ? bottom - el.getBoundingRectHeight() : el.top;
             if(rect){
-            factory.imagePosition.top = -(rect.top - img.top);
-            factory.imagePosition.left = -(rect.left - img.left);
+              factory.imageCenter = false;
+              factory.imagePosition.top = -(rect.top - img.top);
+              factory.imagePosition.left = -(rect.left - img.left);
+              factory.imagePosition.oldTop = img.top;
+              factory.imagePosition.oldLeft = img.left;
             }
+            var activeObject = canvas.getActiveObject().get('type');
+            console.log(activeObject);
             if(titleText){
-                var fontPanel = $('.font-controll-panel');
                 fontPanelCoordinates.top = titleText.top - fontPanel[0].clientHeight - 20;
                 fontPanelCoordinates.left = titleText.left + (fontPanel[0].clientWidth / 4);
                 fontPanel.css('top', fontPanelCoordinates.top);
@@ -199,8 +190,14 @@
           imageObj.applyFilters(canvas.renderAll.bind(canvas));
 
           if(factory.imageCenter === false){
-            imageObj.left = factory.imagePosition.left;
-            imageObj.top = factory.imagePosition.top;
+            if(rect){
+              imageObj.top = factory.imagePosition.oldTop;
+              imageObj.left = factory.imagePosition.oldLeft;
+            }else{
+              imageObj.left = factory.imagePosition.left;
+              imageObj.top = factory.imagePosition.top;
+            }
+
           }
           if(factory.rect === true){
 
@@ -267,12 +264,30 @@
 
         });
 
+          canvas.on ("object:selected", function (object) {
+            var activeObject = canvas.getActiveObject().get('type');
+            if(activeObject === 'textbox'){
+
+              var panel = $('.font-controll-panel');
+              panel.css('display', 'block');
+              var fontPanel = $('.font-controll-panel');
+              fontPanelCoordinates.top = titleText.top - fontPanel[0].clientHeight - 20;
+              fontPanelCoordinates.left = titleText.left + (fontPanel[0].clientWidth / 4);
+              fontPanel.css('top', fontPanelCoordinates.top);
+              fontPanel.css('left', fontPanelCoordinates.left);
+              }
+          });
+          canvas.on ("selection:cleared", function (object) {
+              var panel = $('.font-controll-panel');
+              panel.css('display', 'none');
+          });
+
         };
 
 
         return factory;
     }
 
-    canvasService.$inject = [];
+    canvasService.$inject = ['$rootScope'];
     angular.module('canvas.Service', []).factory('canvasService', canvasService);
 })();
