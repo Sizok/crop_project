@@ -136,13 +136,13 @@
               factory.imagePosition.oldLeft = img.left;
             }
             var activeObject = canvas.getActiveObject().get('type');
-            console.log(activeObject);
-            if(titleText){
-                fontPanelCoordinates.top = titleText.top - fontPanel[0].clientHeight - 20;
-                fontPanelCoordinates.left = titleText.left + (fontPanel[0].clientWidth / 4);
-                fontPanel.css('top', fontPanelCoordinates.top);
-                fontPanel.css('left', fontPanelCoordinates.left);
-            }
+            // console.log(activeObject);
+            // if(titleText){
+            //     fontPanelCoordinates.top = titleText.top - fontPanel[0].clientHeight - 20;
+            //     fontPanelCoordinates.left = titleText.left + (fontPanel[0].clientWidth / 4);
+            //     fontPanel.css('top', fontPanelCoordinates.top);
+            //     fontPanel.css('left', fontPanelCoordinates.left);
+            // }
           });
 
 
